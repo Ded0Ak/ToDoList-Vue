@@ -1,26 +1,77 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="todo-app">
+    <h1>ToDo List</h1>
+    <TodoInput @add-task="addTask"/>
+    <TodoList 
+      :tasks="tasks" 
+      @remove-task="removeTask" 
+      @toggle-task="toggleTask" 
+      @edit-task="editTask" 
+    />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TodoInput from './components/TodoInput.vue';
+import TodoList from './components/TodoList.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TodoInput,
+    TodoList
+  },
+  data() {
+    return {
+      tasks: []
+    };
+  },
+  mounted() {
+    // Загрузка задач из LocalStorage при загрузке приложения
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      this.tasks = JSON.parse(savedTasks);
+    }
+  },
+  watch: {
+    // Отслеживаем изменения tasks и сохраняем их в LocalStorage
+    tasks: {
+      handler(newTasks) {
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
+      },
+      deep: true
+    }
+  },
+  methods: {
+    addTask(task) {
+      this.tasks.push({ id: Date.now(), text: task, completed: false });
+    },
+    removeTask(id) {
+      this.tasks = this.tasks.filter(task => task.id !== id);
+    },
+    toggleTask(id) {
+      const task = this.tasks.find(task => task.id === id);
+      if (task) task.completed = !task.completed;
+    },
+    editTask(id, newText) {
+      const task = this.tasks.find(task => task.id === id);
+      if (task) task.text = newText;
+    }
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+<style scoped>
+.todo-app {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
