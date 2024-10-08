@@ -1,10 +1,6 @@
 <template>
   <div class="todo-input">
-    <input 
-      v-model="newTask" 
-      @keyup.enter="submitTask" 
-      placeholder="Enter a new task" 
-    />
+    <input v-model="newTask" @keyup.enter="submitTask" placeholder="Enter a new task" maxlength="150" />
     <button @click="submitTask">Add Task</button>
   </div>
 </template>

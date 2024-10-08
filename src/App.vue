@@ -1,13 +1,8 @@
 <template>
   <div class="todo-app">
     <h1>ToDo List</h1>
-    <TodoInput @add-task="addTask"/>
-    <TodoList 
-      :tasks="tasks" 
-      @remove-task="removeTask" 
-      @toggle-task="toggleTask" 
-      @edit-task="editTask" 
-    />
+    <TodoInput @add-task="addTask" />
+    <TodoList :tasks="tasks" @remove-task="removeTask" @toggle-task="toggleTask" @edit-task="editTask" />
   </div>
 </template>
 
@@ -27,14 +22,12 @@ export default {
     };
   },
   mounted() {
-    // Загрузка задач из LocalStorage при загрузке приложения
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
       this.tasks = JSON.parse(savedTasks);
     }
   },
   watch: {
-    // Отслеживаем изменения tasks и сохраняем их в LocalStorage
     tasks: {
       handler(newTasks) {
         localStorage.setItem('tasks', JSON.stringify(newTasks));
@@ -68,7 +61,7 @@ export default {
   padding: 20px;
   border-radius: 10px;
   background: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
